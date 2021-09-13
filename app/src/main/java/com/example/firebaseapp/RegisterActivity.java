@@ -70,7 +70,7 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
 
                             FirebaseUser firebaseUser = auth.getCurrentUser();
-                            assert firebaseUser != null;
+                           
                             String userid = firebaseUser.getUid();
 
                             myRef =  FirebaseDatabase.getInstance().getReference("MyUsers").child(userid);
@@ -87,8 +87,10 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
 
                                     if(task.isSuccessful()){
+                                        Toast.makeText(RegisterActivity.this, "Welcome to firebase app", Toast.LENGTH_SHORT).show();
+
                                         Intent i = new Intent(RegisterActivity.this,MainActivity.class);
-                                        //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(i);
                                         finish();
                                     }
