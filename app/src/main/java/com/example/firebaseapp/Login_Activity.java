@@ -55,17 +55,19 @@ public class Login_Activity extends AppCompatActivity {
                 auth.signInWithEmailAndPassword(email_text,pass_text)
                         .addOnCompleteListener(task -> {
                             if(task.isSuccessful()){
+                                if(auth.getCurrentUser().isEmailVerified()){
+                                    Toast.makeText(Login_Activity.this, "Welcome to RUET Connect", Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(Login_Activity.this, "Welcome to firebase app", Toast.LENGTH_SHORT).show();
-
-                                Intent i = new Intent(Login_Activity.this, MainActivity.class);
-                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(i);
-                                finish();
-
+                                    Intent i = new Intent(Login_Activity.this, MainActivity.class);
+                                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(i);
+                                    finish();
+                                }else{
+                                    Toast.makeText(Login_Activity.this, "Please verfy email", Toast.LENGTH_SHORT).show();
+                                }
                             }
                             else{
-                                Toast.makeText(Login_Activity.this, "Sign in failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login_Activity.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
             }

@@ -87,18 +87,19 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
 
                                     if(task.isSuccessful()){
-                                        Toast.makeText(RegisterActivity.this, "Welcome to firebase app", Toast.LENGTH_SHORT).show();
+                                        auth.getCurrentUser().sendEmailVerification();
+                                        Toast.makeText(RegisterActivity.this, "Please verify your Email", Toast.LENGTH_SHORT).show();
 
-                                        Intent i = new Intent(RegisterActivity.this,MainActivity.class);
+                                       /* Intent i = new Intent(RegisterActivity.this,MainActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(i);
-                                        finish();
+                                        finish();*/
                                     }
 
                                 }
                             });
                         }else{
-                            Toast.makeText(RegisterActivity.this, "Failed to register", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
