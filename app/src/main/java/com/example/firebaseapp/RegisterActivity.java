@@ -3,6 +3,8 @@ package com.example.firebaseapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,8 +35,16 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Please wait...");
+
+
+
 
         userET = findViewById(R.id.userEditText);
         passET = findViewById(R.id.passEditText);
@@ -44,8 +54,10 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+
                 String username_text = userET.getText().toString();
                 String email_text = emailET.getText().toString();
                 String pass_text = passET.getText().toString();
@@ -55,24 +67,31 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
                 }else{
                     RegisterNow(username_text,email_text,pass_text);
                 }
+
             }
+
         });
     }
 
     private void RegisterNow(final String username,String email,String password){
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Please wait...");
+
         auth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
+
+                        progressDialog.show();
+
                         if(task.isSuccessful()){
-
                             Toast.makeText(RegisterActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-
                             FirebaseUser firebaseUser = auth.getCurrentUser();
-                           
+                            
                             String userid = firebaseUser.getUid();
-
                             myRef =  FirebaseDatabase.getInstance().getReference("MyUsers").child(userid);
 
                             HashMap<String,String>hashMap = new HashMap<>();
@@ -88,12 +107,12 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
 
                                     if(task.isSuccessful()){
                                         auth.getCurrentUser().sendEmailVerification();
-                                        Toast.makeText(RegisterActivity.this, "Please verify your Email", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "A Verification Link has been sent to you Email ", Toast.LENGTH_SHORT).show();
 
-                                       /* Intent i = new Intent(RegisterActivity.this,MainActivity.class);
-                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        Intent i = new Intent(RegisterActivity.this,Login_Activity.class);
                                         startActivity(i);
-                                        finish();*/
+                                        finish();
+
                                     }
 
                                 }
@@ -101,6 +120,7 @@ public class RegisterActivity<DatabaseReference> extends AppCompatActivity {
                         }else{
                             Toast.makeText(RegisterActivity.this,task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                        //progressDialog.hide();
                     }
                 });
     }
